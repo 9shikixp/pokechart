@@ -60,71 +60,6 @@ def typeconeng(typejap):
 def typeconjap(typeeng):
 	return typetojap[typeeng]
 
-def attackSuggest(poketype):
-	print("atk_poketype: ", len(poketype))
-	type1 = typeconeng(poketype[0])
-	calc1 = typechart[Type[type1].value, :]
-
-	if len(poketype) == 2:
-		type2 = typeconeng(poketype[1])
-		calc2 = typechart[Type[type2].value, :]
-		result = np.maximum(calc1,calc2)
-	else:
-		result = calc1
-	# print("result: ",result)
-
-	typecount = np.zeros(18)
-	weeklist = (np.where(result < threshold)[0])
-	for w in weeklist:
-		print("WEEK_TYPE : " + Type(w).name);
-		tmp = typechart[:, w]
-		stronglist = (np.where(tmp > threshold)[0])
-		# print("STRONG_TYPE : ")
-		for s in stronglist:
-			typecount[s] += 1
-			# print(typeconjap(Type(s).name));
-		# print("-----")
-	print(typecount)
-	maxstrong = np.where(np.max(typecount) == typecount)[0]
-	# print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in maxstrong:
-		# print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	return sugtype
-
-def defenceSuggest(poketype):
-	type1 = typeconeng(poketype[0])
-	calc1 = typechart[:, Type[type1].value]
-
-	if len(poketype) == 2:
-		type2 = typeconeng(poketype[1])
-		calc2 = typechart[:, Type[type2].value]
-		result = calc1 * calc2
-	else:
-		result = calc1
-	# print(result)
-
-	typecount = np.zeros(18)
-	weeklist = (np.where(result > threshold)[0])
-	for w in weeklist:
-		print("WEEK_TYPE : " + Type(w).name);
-		tmp = typechart[w, :]
-		stronglist = (np.where(tmp < threshold)[0])
-		# print("STRONG_TYPE : ")
-		for s in stronglist:
-			typecount[s] += 1
-			# print(typeconjap(Type(s).name));
-		# print("-----")
-	print(typecount)
-	maxstrong = np.where(np.max(typecount) == typecount)[0]
-	# print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in stronglist:
-		# print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	return sugtype
-
 def partySuggest(typelist):
 	print(typelist)
 	result = np.ones(18)
@@ -138,9 +73,6 @@ def partySuggest(typelist):
 			result *= calc1 * calc2
 		else:
 			result *= calc1
-		print(result)
-	print(len(typelist))
-	print(result)
 	maxweektype = np.where(np.max(result) == result)[0]
 	deftypecount = np.zeros(18)
 	for mw in maxweektype:

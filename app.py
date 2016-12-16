@@ -39,7 +39,7 @@ def post_requwst():
 		pokedata += addstr(row) + "<br>\n"
 		typelist += [row[2]]
 
-	lastresult = typechart.partySuggest2(typelist)
+	lastresult = typechart.partySuggest(typelist)
 	print("lastresult")
 	print(lastresult)
 	print(typelist)
