@@ -15,10 +15,9 @@ def addstr(row):
 
 @app.route('/')
 def index():
-	a = np.array([1, 2, 3, 4])
-	b = np.array([1, 2, 3, 4])
-	result = a*b
-	return render_template('index.html', message=result)
+	pokemon = list()
+	pokemon += ["","","","","",""]
+	return render_template('index.html', message="パーティ補完ツール", pokemon=pokemon)
 
 @app.route('/post_request', methods=['POST'])
 def post_requwst():
@@ -53,7 +52,7 @@ def post_requwst():
 	print("pokemon: ", pokemon)
 
 	cur.close()
-	return render_template('index.html', message="calcresult", pokemon=pokemon) + pokedata
+	return render_template('index.html', message="計算結果", pokemon=pokemon) + pokedata
 
 
 
