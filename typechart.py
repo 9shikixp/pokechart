@@ -184,51 +184,81 @@ def partySuggest(typelist):
 			print(typeconjap(Type(dsl).name));
 	print("-----")
 
+	atktypecount *= stronglist
+	deftypecount *= stronglist
+
 	# atkmaxstrong = np.where(np.max(atktypecount) == atktypecount)[0]
 	# defmaxstrong = np.where(np.ma np.where(np.max(deftypecount) == deftypecount)[0]x(deftypecount) == deftypecount)[0]
 
 
-	stronglist *= (atktypecount + deftypecount)
+	# stronglist *= (atktypecount + deftypecount)
 
 
-	maxstrong = np.where(np.max(stronglist) == stronglist)[0]
-	print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in maxstrong:
+	# maxstrong = np.where(np.max(stronglist) == stronglist)[0]
+	# print("MAX_STRONG_TYPE : ")
+	# sugtype = list()
+	# for m in maxstrong:
+	# 	print(typeconjap(Type(m).name))
+	# 	sugtype += typeconjap(Type(m).name);
+	# return sugtype
+	maxatkstrong = np.where(np.max(atktypecount) == atktypecount)[0]
+	maxdefstrong = np.where(np.max(deftypecount) == deftypecount)[0]
+	print("atktypecount: ",atktypecount)
+	print("deftyoecount: ",deftypecount)
+	print("partystrong")
+	print("mas",maxatkstrong)
+	print("mds",maxdefstrong)
+	atksugtype = list()
+	defsugtype = list()
+	for m in maxatkstrong:
 		print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	return sugtype
+		atksugtype += typeconjap(Type(m).name);
+	for m in maxdefstrong:
+		print(typeconjap(Type(m).name))
+		defsugtype += typeconjap(Type(m).name);
+
+	return atksugtype, defsugtype
 
 def partySuggest2(typelist):
 	print("typelist")
 	print(typelist)
-	result = np.zeros(18)
+	atkresult = np.zeros(18)
+	defresult = np.zeros(18)
 	for tl in typelist:
 		atktype = attackSuggest(tl)
 		print("atktype: ",atktype)
 		for a in atktype:
-			result[Type[typeconeng(a)].value] += 1
+			atkresult[Type[typeconeng(a)].value] += 1
 
 		deftype = defenceSuggest(tl)
 		print("deftype: ",deftype)
 		for d in deftype:
-			result[Type[typeconeng(d)].value] +=1
+			defresult[Type[typeconeng(d)].value] +=1
 	for tl in typelist:
-		result[Type[typeconeng(tl[0])].value] = 0
+		atkresult[Type[typeconeng(tl[0])].value] = 0
+		defresult[Type[typeconeng(tl[0])].value] = 0
+		
 		try:
-			result[Type[typeconeng(tl[1])].value] = 0
+			atkresult[Type[typeconeng(tl[1])].value] = 0
+			defresult[Type[typeconeng(tl[1])].value] = 0
 		except Exception as e:
 			print(e)
 			print(tl)
 
-
-	maxstrong = np.where(np.max(result) == result)[0]
-	print("result: ",result)
+	maxatkstrong = np.where(np.max(atkresult) == atkresult)[0]
+	maxdefstrong = np.where(np.max(defresult) == defresult)[0]
+	print("atkresult: ",atkresult)
+	print("defresult: ",defresult)
 	print("partystrong")
-	print(maxstrong)
-	sugtype = list()
-	for m in maxstrong:
+	print("mas",maxatkstrong)
+	print("mds",maxdefstrong)
+	atksugtype = list()
+	defsugtype = list()
+	for m in maxatkstrong:
 		print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	
-	return sugtype
+		atksugtype += typeconjap(Type(m).name);
+	for m in maxdefstrong:
+		print(typeconjap(Type(m).name))
+		defsugtype += typeconjap(Type(m).name);
+
+	return atksugtype, defsugtype

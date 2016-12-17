@@ -39,12 +39,13 @@ def post_requwst():
 		pokedata += addstr(row) + "<br>\n"
 		typelist += [row[2]]
 
-	lastresult = typechart.partySuggest(typelist)
-	print("lastresult")
-	print(lastresult)
-	print(typelist)
-	cur.execute("select * from t_poke where type glob ? and type glob '??' and not type glob'*[" + "".join(typelist) + "]*' order by total desc limit 10", ('*['+"".join(lastresult)+']*',))
-	print("".join(lastresult))
+	atkresult, defresult = typechart.partySuggest(typelist)
+	# print("atkresult")
+	# print(atkresult)
+	# print(typelist)
+	cur.execute("select * from t_poke where type glob ? and type glob ? and not type glob'*[" + "".join(typelist) + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+	print("atkresult","".join(atkresult))
+	print("defresult","".join(defresult))
 	print(cur.fetchall())
 	
 
