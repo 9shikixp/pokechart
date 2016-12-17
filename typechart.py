@@ -120,7 +120,7 @@ def defenceSuggest(poketype):
 	maxstrong = np.where(np.max(typecount) == typecount)[0]
 	# print("MAX_STRONG_TYPE : ")
 	sugtype = list()
-	for m in stronglist:
+	for m in maxstrong:
 		# print(typeconjap(Type(m).name))
 		sugtype += typeconjap(Type(m).name);
 	return sugtype
