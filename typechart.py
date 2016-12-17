@@ -129,50 +129,68 @@ def partySuggest(typelist):
 	print(typelist)
 	atkresult = np.ones(18)
 	defresult = np.ones(18)
+	stronglist = np.ones(18)
+
 	for tl in typelist:
 		type1 = typeconeng(tl[0])
+
 		atkcalc1 = typechart[Type[type1].value, :]
 
 		defcalc1 = typechart[:, Type[type1].value]
 
+		stronglist[Type[type1].value] = 0
+
 		if len(tl) == 2:
 			type2 = typeconeng(tl[1])
+
+			atkcalc2 = typechart[Type[type2].value, :]
+			atkresult *= np.maximum(atkcalc1,atkcalc2)
+
 			defcalc2 = typechart[:, Type[type2].value]
 			defresult *= defcalc1 * defcalc2
-			atkcalc2 = typechart[Type[type2].value, :]
-			atkresult = np.maximum(atkcalc1,atkcalc2)
+
+			stronglist[Type[type2].value] = 0
+
 		else:
 			atkresult *= atkcalc1
 			defresult *= defcalc1
+	print("atkresult: ", atkresult)
+	print("defresult: ", defresult)
+
+
 	atkweektype = np.where(np.min(atkresult) == atkresult)[0]
 	defweektype = np.where(np.max(defresult) == defresult)[0]
+
 	atktypecount = np.zeros(18)
 	deftypecount = np.zeros(18)
+
 	for awt in atkweektype:
-		print("WEEK_TYPE : " + Type(awt).name);
+		print("ATK_WEEK_TYPE : " + Type(awt).name);
 		tmp = typechart[:, awt]
 		atkstronglist = (np.where(tmp > threshold)[0])
-		print("STRONG_TYPE : ")
+		print("ATK_STRONG_TYPE : ")
 		for asl in atkstronglist:
 			atktypecount[asl] += 1
 			print(typeconjap(Type(asl).name));
-		print("-----")
-
+	print("-----")
 
 	for dwt in defweektype:
-		print(typeconjap(Type(dwt).name))
-		print("MAX_WEEK_TYPE : " + Type(dwt).name);
+		print("DEF_WEEK_TYPE : " + Type(dwt).name);
 		tmp = typechart[dwt, :]
 		defstronglist = (np.where(tmp < threshold)[0])
-		print("STRONG_TYPE : ")
+		print("DEF_STRONG_TYPE : ")
 		for dsl in defstronglist:
 			deftypecount[dsl] += 1
 			print(typeconjap(Type(dsl).name));
-		print("-----")
+	print("-----")
 
 	# atkmaxstrong = np.where(np.max(atktypecount) == atktypecount)[0]
 	# defmaxstrong = np.where(np.ma np.where(np.max(deftypecount) == deftypecount)[0]x(deftypecount) == deftypecount)[0]
-	stronglist = atktypecount + deftypecount
+
+
+	stronglist *= (atktypecount + deftypecount)
+
+
 	maxstrong = np.where(np.max(stronglist) == stronglist)[0]
 	print("MAX_STRONG_TYPE : ")
 	sugtype = list()
