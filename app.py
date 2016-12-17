@@ -22,18 +22,20 @@ def index():
 
 @app.route('/post_request', methods=['POST'])
 def post_requwst():
-	pokemon1 = request.form["pokemon1"]
-	pokemon2 = request.form["pokemon2"]
-	pokemon3 = request.form["pokemon3"]
-	pokemon4 = request.form["pokemon4"]
-	pokemon5 = request.form["pokemon5"]
-	pokemon6 = request.form["pokemon6"]
+	pokemon = list()
+	pokemon += [request.form["pokemon1"]]
+	pokemon += [request.form["pokemon2"]]
+	pokemon += [request.form["pokemon3"]]
+	pokemon += [request.form["pokemon4"]]
+	pokemon += [request.form["pokemon5"]]
+	pokemon += [request.form["pokemon6"]]
+
 	typelist = list()
-	print(pokemon6=="")
+	print(pokemon[5]=="")
 	con = sqlite3.connect('test.sqlite3')
 	cur = con.cursor()
 	pokedata = ""
-	cur.execute("select * from t_poke where name like ? or name like ? or name like ? or name like ? or name like ? or name like ?", (pokemon1,pokemon2,pokemon3,pokemon4,pokemon5,pokemon6))
+	cur.execute("select * from t_poke where name like ? or name like ? or name like ? or name like ? or name like ? or name like ?", (pokemon[0],pokemon[1],pokemon[2],pokemon[3],pokemon[4],pokemon[5]))
 	firstresult = cur.fetchall()
 	for row in firstresult:
 		pokedata += addstr(row) + "<br>\n"
@@ -48,10 +50,10 @@ def post_requwst():
 	print("defresult","".join(defresult))
 	print(cur.fetchall())
 	
-
+	print("pokemon: ", pokemon)
 
 	cur.close()
-	return render_template('index.html', message="calcresult") + pokedata
+	return render_template('index.html', message="calcresult", pokemon=pokemon) + pokedata
 
 
 
