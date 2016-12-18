@@ -39,7 +39,7 @@ def post_requwst():
 	# print("atkresult")
 	# print(atkresult)
 	# print(typelist)
-	cur.execute("select * from t_poke where type glob ? and type glob ? and type glob '??' and not type glob'*[" + "".join(typelist) + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+	cur.execute("select * from t_poke where type glob ? and type glob ? and type glob '??' and not type glob'*[" + "".join(typelist).join("闘") + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
 	# and not type glob'*[" + "".join(typelist) + "]*'
 	print("atkresult","".join(atkresult))
 	print("defresult","".join(defresult))
@@ -48,18 +48,17 @@ def post_requwst():
 	print(len(suggestResult)<10)
 	if len(suggestResult)<10:
 		shortage = 10-len(suggestResult)
-		cur.execute("select * from t_poke where (type glob ? or type glob ?) and type glob '??' and not type glob'*[" + "".join(typelist) + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+		cur.execute("select * from t_poke where (type glob ? or type glob ?) and type glob '??' and not type glob'*[" + "".join(typelist).join("闘") + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
 	# and not type glob'*[" + "".join(typelist) + "]*'
 
 		for row in range(0,shortage):
-			suggestOne = cur.fetchone()
-			if suggestOne != None:
-				suggestResult += (suggestOne,)
+			suggestResult += (cur.fetchone(),)
 	print(suggestResult)
 
 	sugpoke = "<hr>\nおすすめのポケモン<br>\n"
 	for row in suggestResult:
-		sugpoke += row[1] + ":" + row[2] + "<br>\n"
+		if row != None:
+			sugpoke += row[1] + ":" + row[2] + "<br>\n"
 	
 	print("pokemon: ", pokemon)
 
