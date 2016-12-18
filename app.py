@@ -48,7 +48,7 @@ def post_requwst():
 	print(len(suggestResult)<10)
 	if len(suggestResult)<10:
 		shortage = 10-len(suggestResult)
-		cur.execute("select * from t_poke where (type glob ? or type glob ?) and type glob '??' and not type glob'*[" + "".join(typelist).join("闘") + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+		cur.execute("select * from t_poke where (type glob ? or type glob ?) and not type glob'*[" + "".join(typelist).join("闘") + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
 	# and not type glob'*[" + "".join(typelist) + "]*'
 
 		for row in range(0,shortage):
