@@ -22,13 +22,8 @@ def index():
 @app.route('/post_request', methods=['POST'])
 def post_requwst():
 	pokemon = list()
-	pokemon += [request.form["pokemon1"]]
-	pokemon += [request.form["pokemon2"]]
-	pokemon += [request.form["pokemon3"]]
-	pokemon += [request.form["pokemon4"]]
-	pokemon += [request.form["pokemon5"]]
-	pokemon += [request.form["pokemon6"]]
-
+	for x in range(1,7):
+		pokemon += [request.form["pokemon"+str(x)]]
 	typelist = list()
 	print(pokemon[5]=="")
 	con = sqlite3.connect('test.sqlite3')
@@ -44,17 +39,23 @@ def post_requwst():
 	# print("atkresult")
 	# print(atkresult)
 	# print(typelist)
-	cur.execute("select * from t_poke where type glob ? and type glob ? and not type glob'*[" + "".join(typelist) + "]*' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+	cur.execute("select * from t_poke where type glob ? and type glob ? and type glob '??' order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+	# and not type glob'*[" + "".join(typelist) + "]*'
 	print("atkresult","".join(atkresult))
 	print("defresult","".join(defresult))
-	print(cur.fetchall())
+	suggestResult = cur.fetchall()
+	print(len(suggestResult)==0)
+	if len(suggestResult)==0:
+		cur.execute("select * from t_poke where (type glob ? or type glob ?) and type glob '??'  order by total desc limit 10", ('*['+"".join(atkresult)+']*','*['+"".join(defresult)+']*'))
+		# and not type glob'*[" + "".join(typelist) + "]*'
+		suggestResult = cur.fetchall()
+	print(suggestResult)
+
 	
 	print("pokemon: ", pokemon)
 
 	cur.close()
 	return render_template('index.html', message="計算結果", pokemon=pokemon) + pokedata
-
-
 
 if __name__ == "__main__":
 	app.run(debug=True)
