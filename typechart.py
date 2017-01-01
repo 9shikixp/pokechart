@@ -65,7 +65,8 @@ def partySuggest(typelist):
 	atkresult = np.ones(18)
 	defresult = np.ones(18)
 	stronglist = np.ones(18)
-	stronglist[6] = 0
+	#ignore fighting
+	# stronglist[6] = 0
 	for tl in typelist:
 		type1 = typeconeng(tl[0])
 
