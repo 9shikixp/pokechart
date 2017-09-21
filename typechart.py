@@ -60,139 +60,108 @@ def typeconeng(typejap):
 def typeconjap(typeeng):
 	return typetojap[typeeng]
 
-def attackSuggest(poketype):
-	print("atk_poketype: ", len(poketype))
-	type1 = typeconeng(poketype[0])
-	calc1 = typechart[Type[type1].value, :]
-
-	if len(poketype) == 2:
-		type2 = typeconeng(poketype[1])
-		calc2 = typechart[Type[type2].value, :]
-		result = np.maximum(calc1,calc2)
-	else:
-		result = calc1
-	# print("result: ",result)
-
-	typecount = np.zeros(18)
-	weeklist = (np.where(result < threshold)[0])
-	for w in weeklist:
-		print("WEEK_TYPE : " + Type(w).name);
-		tmp = typechart[:, w]
-		stronglist = (np.where(tmp > threshold)[0])
-		# print("STRONG_TYPE : ")
-		for s in stronglist:
-			typecount[s] += 1
-			# print(typeconjap(Type(s).name));
-		# print("-----")
-	print(typecount)
-	maxstrong = np.where(np.max(typecount) == typecount)[0]
-	# print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in maxstrong:
-		# print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	return sugtype
-
-def defenceSuggest(poketype):
-	type1 = typeconeng(poketype[0])
-	calc1 = typechart[:, Type[type1].value]
-
-	if len(poketype) == 2:
-		type2 = typeconeng(poketype[1])
-		calc2 = typechart[:, Type[type2].value]
-		result = calc1 * calc2
-	else:
-		result = calc1
-	# print(result)
-
-	typecount = np.zeros(18)
-	weeklist = (np.where(result > threshold)[0])
-	for w in weeklist:
-		print("WEEK_TYPE : " + Type(w).name);
-		tmp = typechart[w, :]
-		stronglist = (np.where(tmp < threshold)[0])
-		# print("STRONG_TYPE : ")
-		for s in stronglist:
-			typecount[s] += 1
-			# print(typeconjap(Type(s).name));
-		# print("-----")
-	print(typecount)
-	maxstrong = np.where(np.max(typecount) == typecount)[0]
-	# print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in maxstrong:
-		# print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	return sugtype
-
 def partySuggest(typelist):
 	print(typelist)
-	result = np.ones(18)
+	atkresult = np.ones(18)
+	defresult = np.ones(18)
+	stronglist = np.ones(18)
+	# ignore flying
+	stronglist[Type.flying.value] = 0
+	# ignore ground
+	# stronglist[Type.ground.value] = 0
+	#ignore fighting
+	# stronglist[Type.fighting.value] = 0
+	#ignore dark
+	# stronglist[Type.dark.value] = 0
+	# ignore electric
+	# stronglist[Type.electric.value] = 0
+	# ignore fire
+	# stronglist[Type.fire.value] = 0
+
 	for tl in typelist:
 		type1 = typeconeng(tl[0])
-		calc1 = typechart[:, Type[type1].value]
+
+		atkcalc1 = typechart[Type[type1].value, :]
+
+		defcalc1 = typechart[:, Type[type1].value]
+
+		stronglist[Type[type1].value] = 0
 
 		if len(tl) == 2:
 			type2 = typeconeng(tl[1])
-			calc2 = typechart[:, Type[type2].value]
-			result *= calc1 * calc2
+
+			atkcalc2 = typechart[Type[type2].value, :]
+			atkresult *= np.maximum(atkcalc1,atkcalc2)
+
+			defcalc2 = typechart[:, Type[type2].value]
+			defresult *= defcalc1 * defcalc2
+
+			stronglist[Type[type2].value] = 0
+
 		else:
-			result *= calc1
-		print(result)
-	print(len(typelist))
-	print(result)
-	maxweektype = np.where(np.max(result) == result)[0]
+			atkresult *= atkcalc1
+			defresult *= defcalc1
+	print("atkresult: ", atkresult)
+	print("defresult: ", defresult)
+
+
+	atkweektype = np.where(np.min(atkresult) == atkresult)[0]
+	defweektype = np.where(np.max(defresult) == defresult)[0]
+
+	atktypecount = np.zeros(18)
 	deftypecount = np.zeros(18)
-	for mw in maxweektype:
-		print(typeconjap(Type(mw).name))
-		print("MAX_WEEK_TYPE : " + Type(mw).name);
-		tmp = typechart[mw, :]
-		stronglist = (np.where(tmp < threshold)[0])
-		print("STRONG_TYPE : ")
-		for s in stronglist:
-			deftypecount[s] += 1
-			print(typeconjap(Type(s).name));
-		print("-----")
+
+	for awt in atkweektype:
+		print("ATK_WEEK_TYPE : " + Type(awt).name);
+		tmp = typechart[:, awt]
+		atkstronglist = (np.where(tmp > threshold)[0])
+		print("ATK_STRONG_TYPE : ")
+		for asl in atkstronglist:
+			atktypecount[asl] += 1
+			print(typeconjap(Type(asl).name));
+	print("-----")
+
+	for dwt in defweektype:
+		print("DEF_WEEK_TYPE : " + Type(dwt).name);
+		tmp = typechart[dwt, :]
+		defstronglist = (np.where(tmp < threshold)[0])
+		print("DEF_STRONG_TYPE : ")
+		for dsl in defstronglist:
+			deftypecount[dsl] += 1
+			print(typeconjap(Type(dsl).name));
+	print("-----")
+
+	atktypecount *= stronglist
+	deftypecount *= stronglist
+
+	# atkmaxstrong = np.where(np.max(atktypecount) == atktypecount)[0]
+	# defmaxstrong = np.where(np.ma np.where(np.max(deftypecount) == deftypecount)[0]x(deftypecount) == deftypecount)[0]
 
 
-	maxstrong = np.where(np.max(deftypecount) == deftypecount)[0]
-	print("MAX_STRONG_TYPE : ")
-	sugtype = list()
-	for m in maxstrong:
-		print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	
-	return sugtype
-def partySuggest2(typelist):
-	print("typelist")
-	print(typelist)
-	result = np.zeros(18)
-	for tl in typelist:
-		atktype = attackSuggest(tl)
-		print("atktype: ",atktype)
-		for a in atktype:
-			result[Type[typeconeng(a)].value] += 1
-
-		deftype = defenceSuggest(tl)
-		print("deftype: ",deftype)
-		for d in deftype:
-			result[Type[typeconeng(d)].value] +=1
-	for tl in typelist:
-		result[Type[typeconeng(tl[0])].value] = 0
-		try:
-			result[Type[typeconeng(tl[1])].value] = 0
-		except Exception as e:
-			print(e)
-			print(tl)
+	# stronglist *= (atktypecount + deftypecount)
 
 
-	maxstrong = np.where(np.max(result) == result)[0]
-	print("result: ",result)
+	# maxstrong = np.where(np.max(stronglist) == stronglist)[0]
+	# print("MAX_STRONG_TYPE : ")
+	# sugtype = list()
+	# for m in maxstrong:
+	# 	print(typeconjap(Type(m).name))
+	# 	sugtype += typeconjap(Type(m).name);
+	# return sugtype
+	maxatkstrong = np.where(np.max(atktypecount) == atktypecount)[0]
+	maxdefstrong = np.where(np.max(deftypecount) == deftypecount)[0]
+	print("atktypecount: ",atktypecount)
+	print("deftyoecount: ",deftypecount)
 	print("partystrong")
-	print(maxstrong)
-	sugtype = list()
-	for m in maxstrong:
+	print("mas",maxatkstrong)
+	print("mds",maxdefstrong)
+	atksugtype = list()
+	defsugtype = list()
+	for m in maxatkstrong:
 		print(typeconjap(Type(m).name))
-		sugtype += typeconjap(Type(m).name);
-	
-	return sugtype
+		atksugtype += typeconjap(Type(m).name);
+	for m in maxdefstrong:
+		print(typeconjap(Type(m).name))
+		defsugtype += typeconjap(Type(m).name);
+
+	return atksugtype, defsugtype
