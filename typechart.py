@@ -65,8 +65,19 @@ def partySuggest(typelist):
 	atkresult = np.ones(18)
 	defresult = np.ones(18)
 	stronglist = np.ones(18)
+	# ignore flying
+	stronglist[Type.flying.value] = 0
+	# ignore ground
+	# stronglist[Type.ground.value] = 0
 	#ignore fighting
-	# stronglist[6] = 0
+	# stronglist[Type.fighting.value] = 0
+	#ignore dark
+	# stronglist[Type.dark.value] = 0
+	# ignore electric
+	# stronglist[Type.electric.value] = 0
+	# ignore fire
+	# stronglist[Type.fire.value] = 0
+
 	for tl in typelist:
 		type1 = typeconeng(tl[0])
 
